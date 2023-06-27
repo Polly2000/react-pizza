@@ -3,8 +3,10 @@ import Header from './components/Header';
 import Categories from './components/Categories';
 import Sort from './components/Sort';
 import PizzaBlock from './components/PizzaBlock';
+import pizzas from './assets/pizzas.json';
 
 function App() {
+  console.log(pizzas);
   return (
     <div className="App">
       <div className="wrapper">
@@ -17,10 +19,18 @@ function App() {
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
-              <PizzaBlock price={349} title="Мексиканская" />
-              <PizzaBlock price={449} title="Гавайская" />
-              <PizzaBlock price={250} title="Сырная" />
-              <PizzaBlock price={400} title="Острая" />
+              {pizzas.map((pizza) => (
+                // можно сократить код:
+                <PizzaBlock {...pizza} />
+                // <PizzaBlock
+                //   key={pizza.id}
+                //   imageUrl={pizza.imageUrl}
+                //   title={pizza.title}
+                //   price={pizza.price}
+                //   sizes={pizza.sizes}
+                //   types={pizza.types}
+                // />
+              ))}
             </div>
           </div>
         </div>
