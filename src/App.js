@@ -1,11 +1,24 @@
-import './scss/app.scss';
+import React, { useState, useEffect } from 'react';
+
 import Header from './components/Header';
 import Categories from './components/Categories';
 import Sort from './components/Sort';
 import PizzaBlock from './components/PizzaBlock';
-import pizzas from './assets/pizzas.json';
+import './scss/app.scss';
 
 function App() {
+  const [pizzas, setPizzas] = useState([]);
+  useEffect(() => {
+    fetch('https://649c3d9c048075719237c2de.mockapi.io/items')
+      .then((res) => {
+        return res.json(); // преобразовали ответ в json (в понятный фронтенду формат)
+      })
+      .then((json) => {
+        // console.log(json); // после преобразования в json отобразили в консоли
+        setPizzas(json); // после преобразования в json записали пиццы
+      });
+  }, []);
+
   return (
     <div className="App">
       <div className="wrapper">
