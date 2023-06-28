@@ -6,7 +6,6 @@ import PizzaBlock from './components/PizzaBlock';
 import pizzas from './assets/pizzas.json';
 
 function App() {
-  console.log(pizzas);
   return (
     <div className="App">
       <div className="wrapper">
@@ -21,7 +20,7 @@ function App() {
             <div className="content__items">
               {pizzas.map((pizza) => (
                 // можно сократить код:
-                <PizzaBlock {...pizza} />
+                <PizzaBlock {...pizza} key={pizza.id} />
                 // <PizzaBlock
                 //   key={pizza.id}
                 //   imageUrl={pizza.imageUrl}
