@@ -4,24 +4,27 @@ import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
+import Pagination from '../components/Pagination';
 
-const Home = () => {
+const Home = ({ searchValue }) => {
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryId, setCategoryId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [sortType, setSortType] = useState({
     name: 'популярности',
     sortType: 'rating',
   });
 
-  sortType && console.log(categoryId, sortType);
+  const items = pizzas.map((pizza) => <PizzaBlock {...pizza} key={pizza.id} />);
+  const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
+  const category = categoryId > 0 ? `category=${categoryId}` : '';
+  const search = searchValue ? `&search=${searchValue}` : '';
 
   useEffect(() => {
     setIsLoading(true);
     fetch(
-      `https://649c3d9c048075719237c2de.mockapi.io/items?${
-        categoryId > 0 ? `category=${categoryId}` : ''
-      }&sortBy=${sortType.sortProperty}&order=desc`,
+      `https://649c3d9c048075719237c2de.mockapi.io/items?page=${currentPage}&limit=4${category}&sortBy=${sortType.sortProperty}&order=desc${search}`,
     )
       .then((res) => {
         return res.json(); // преобразовали ответ в json (в понятный фронтенду формат)
@@ -32,7 +35,7 @@ const Home = () => {
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
-  }, [categoryId, sortType]);
+  }, [categoryId, sortType, searchValue, currentPage]);
 
   return (
     <div className="container">
@@ -42,9 +45,7 @@ const Home = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
-        {isLoading
-          ? [...new Array(6)].map((_, index) => <Skeleton key={index} />)
-          : pizzas.map((pizza) => <PizzaBlock {...pizza} key={pizza.id} />)}
+        {isLoading ? skeletons : items}
         {/* {pizzas.map((pizza) => (
                 // можно сократить код:
                 <PizzaBlock {...pizza} key={pizza.id} />
@@ -58,6 +59,7 @@ const Home = () => {
                 // />
               ))} */}
       </div>
+      <Pagination onChangePage={(number) => setCurrentPage(number)} />
     </div>
   );
 };
