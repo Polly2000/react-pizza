@@ -6,15 +6,12 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
-import { increment, decrement } from './redux/slices/filterSlice';
 import './scss/app.scss';
 
 export const SearchContext = createContext('');
 
 function App() {
   const [searchValue, setSearchValue] = useState('');
-  const count = useSelector((state) => state.filter.value);
-  const dispatch = useDispatch();
 
   return (
     <div className="App">
