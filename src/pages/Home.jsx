@@ -8,21 +8,24 @@ import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
-import { setCategoryId } from '../redux/slices/filterSlice';
+import { setCategoryId, setCurrentPage } from '../redux/slices/filterSlice';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { categoryId, sort } = useSelector(state => state.filter);
+  const { categoryId, sort, currentPage } = useSelector(state => state.filter);
   const sortType = sort.sortProperty;
 
   const { searchValue } = useContext(SearchContext);
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
 
 
   const onClickCategory = (id) => {
     dispatch(setCategoryId(id));
+  }
+
+  const onChangePage = (number) => {
+    dispatch(setCurrentPage(number));
   }
 
   const items = pizzas.map((pizza) => <PizzaBlock {...pizza} key={pizza.id} />);
@@ -81,7 +84,7 @@ const Home = () => {
                 // />
               ))} */}
       </div>
-      <Pagination onChangePage={(number) => setCurrentPage(number)} />
+      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
 };
