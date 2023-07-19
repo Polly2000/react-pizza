@@ -24,3 +24,13 @@
   left: 14px;
   top: 12px;
 }
+
+.clear {
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  top: 15px;
+  right: 15px;
+  opacity: .3;
+  cursor: pointer;
+}

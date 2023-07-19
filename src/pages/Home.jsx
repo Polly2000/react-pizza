@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 
 import { SearchContext } from '../App';
 import Categories from '../components/Categories';
@@ -29,19 +30,32 @@ const Home = () => {
   const category = categoryId > 0 ? `&category=${categoryId}` : '';
   const search = searchValue ? `&search=${searchValue}` : '';
 
+  // оставляю для теории
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   fetch(
+  //     `https://649c3d9c048075719237c2de.mockapi.io/items?page=${currentPage}&limit=4${category}&sortBy=${sortType}&order=desc${search}`,
+  //   )
+  //     .then((res) => {
+  //       return res.json(); // преобразовали ответ в json (в понятный фронтенду формат)
+  //     })
+  //     .then((json) => {
+  //       // console.log(json); // после преобразования в json отобразили в консоли
+  //       setPizzas(json); // после преобразования в json записали пиццы
+  //       setIsLoading(false);
+  //     });
+  //   window.scrollTo(0, 0);
+  // }, [categoryId, sortType, searchValue, currentPage]);
+
   useEffect(() => {
     setIsLoading(true);
-    fetch(
-      `https://649c3d9c048075719237c2de.mockapi.io/items?page=${currentPage}&limit=4${category}&sortBy=${sortType}&order=desc${search}`,
-    )
+    axios
+      .get(`https://649c3d9c048075719237c2de.mockapi.io/items?page=${currentPage}&limit=4${category}&sortBy=${sortType}&order=desc${search}`)
       .then((res) => {
-        return res.json(); // преобразовали ответ в json (в понятный фронтенду формат)
-      })
-      .then((json) => {
-        // console.log(json); // после преобразования в json отобразили в консоли
-        setPizzas(json); // после преобразования в json записали пиццы
+        setPizzas(res.data);
         setIsLoading(false);
       });
+
     window.scrollTo(0, 0);
   }, [categoryId, sortType, searchValue, currentPage]);
 
