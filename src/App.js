@@ -12,6 +12,7 @@ export const SearchContext = createContext('');
 
 function App() {
   const [searchValue, setSearchValue] = useState('');
+  const { totalCount } = useSelector((state) => state.cart);
 
   return (
     <div className="App">

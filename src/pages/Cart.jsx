@@ -1,8 +1,25 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { addItem, removeItem, clearItems } from '../redux/slices/cartSlice';
+import CartItem from '../components/CartItem';
+import CartEmpty from '../components/CartEmpty';
+import { clearItems } from '../redux/slices/cartSlice';
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  const { items, totalPrice } = useSelector((state) => state.cart);
+  const totalCount = items.reduce((sum, item) => sum + item.count, 0);
+
+  const onClickClear = () => {
+    if (window.confirm('Are you sure you want to clear cart?')) {
+      dispatch(clearItems());
+    }
+  };
+
+  if (!totalCount) {
+    return <CartEmpty />;
+  }
+
   return (
     <div className="container container--cart">
       <div className="cart">
@@ -35,7 +52,7 @@ const Cart = () => {
             </svg>
             Корзина
           </h2>
-          <div className="cart__clear">
+          <div onClick={onClickClear} className="cart__clear">
             <svg
               width="20"
               height="20"
@@ -72,36 +89,38 @@ const Cart = () => {
           </div>
         </div>
         <div className="content__items">
-
+          {items.map((item) => (
+            <CartItem key={item.id} {...item} />
+          ))}
         </div>
         <div className="cart__bottom">
           <div className="cart__bottom-details">
             <span>
               {' '}
-              Всего пицц: <b> шт.</b>{' '}
+              Всего пицц: <b> {totalCount}шт.</b>{' '}
             </span>
             <span>
               {' '}
-              Сумма заказа: <b> ₽</b>{' '}
+              Сумма заказа: <b> {totalPrice}₽</b>{' '}
             </span>
           </div>
           <div className="cart__bottom-buttons">
             {/* <Link to="/" className="button button--outline button--add go-back-btn"> */}
-              <svg
-                width="8"
-                height="14"
-                viewBox="0 0 8 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M7 13L1 6.93015L6.86175 1"
-                  stroke="#D3D3D3"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"></path>
-              </svg>
+            <svg
+              width="8"
+              height="14"
+              viewBox="0 0 8 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M7 13L1 6.93015L6.86175 1"
+                stroke="#D3D3D3"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"></path>
+            </svg>
 
-              <span>Вернуться назад</span>
+            <span>Вернуться назад</span>
             {/* </Link> */}
             <div className="button pay-btn">
               <span>Оплатить сейчас</span>

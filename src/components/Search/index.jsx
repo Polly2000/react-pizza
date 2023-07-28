@@ -18,6 +18,7 @@ const Search = () => {
   // просит создать функцию при первом рендере и больше не пересоздавать
   // иначе: сохранили ссылку на функцию и сделали ее отложенной
   // debounce - отложенное выполнение функции
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchValue = useCallback(
     debounce((str) => {
       setSearchValue(str);
