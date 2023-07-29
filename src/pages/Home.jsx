@@ -8,16 +8,20 @@ import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
+
 import { setCategoryId, setCurrentPage } from '../redux/slices/filterSlice';
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { items, status } = useSelector(state => state.pizza)
   const { categoryId, sort, currentPage } = useSelector(state => state.filter);
   const sortType = sort.sortProperty;
 
   const { searchValue } = useContext(SearchContext);
-  const [pizzas, setPizzas] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
+  const pizzas = items.map((pizza) => <PizzaBlock {...pizza} key={pizza.id} />);
+  const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
 
   const onClickCategory = (id) => {
@@ -28,10 +32,23 @@ const Home = () => {
     dispatch(setCurrentPage(number));
   }
 
-  const items = pizzas.map((pizza) => <PizzaBlock {...pizza} key={pizza.id} />);
-  const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
-  const category = categoryId > 0 ? `&category=${categoryId}` : '';
-  const search = searchValue ? `&search=${searchValue}` : '';
+  const getPizzas = async () => {
+    const category = categoryId > 0 ? `&category=${categoryId}` : '';
+    const search = searchValue ? `&search=${searchValue}` : '';
+
+    dispatch(fetchPizzas({
+      category,
+      search,
+      sortType,
+      currentPage
+    }));
+    
+    window.scrollTo(0, 0);
+  }
+
+  useEffect(() => {
+    getPizzas();
+  }, [categoryId, sortType, searchValue, currentPage])
 
   // оставляю для теории
   // useEffect(() => {
@@ -50,17 +67,19 @@ const Home = () => {
   //   window.scrollTo(0, 0);
   // }, [categoryId, sortType, searchValue, currentPage]);
 
-  useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`https://649c3d9c048075719237c2de.mockapi.io/items?page=${currentPage}&limit=4${category}&sortBy=${sortType}&order=desc${search}`)
-      .then((res) => {
-        setPizzas(res.data);
-        setIsLoading(false);
-      });
+  // вариант с axios
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   axios
+  //     .get(`https://649c3d9c048075719237c2de.mockapi.io/items?page=${currentPage}&limit=4${category}&sortBy=${sortType}&order=desc${search}`)
+  //     .then((res) => {
+  //       setPizzas(res.data);
+  //       setIsLoading(false);
+  //     });
 
-    window.scrollTo(0, 0);
-  }, [categoryId, sortType, searchValue, currentPage]);
+  //   window.scrollTo(0, 0);
+  // }, [categoryId, sortType, searchValue, currentPage]);
+
 
   return (
     <div className="container">
@@ -70,7 +89,7 @@ const Home = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
-        {isLoading ? skeletons : items}
+        {status === 'success' ?  pizzas : skeletons}
         {/* {pizzas.map((pizza) => (
                 // можно сократить код:
                 <PizzaBlock {...pizza} key={pizza.id} />
