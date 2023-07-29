@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 
-import { SearchContext } from '../App';
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
@@ -11,15 +9,15 @@ import Pagination from '../components/Pagination';
 
 import { setCategoryId, setCurrentPage } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import { selectFilter } from '../redux/slices/filterSlice';
+import { selectPizzaData } from '../redux/slices/pizzaSlice';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { items, status } = useSelector(state => state.pizza)
-  const { categoryId, sort, currentPage } = useSelector(state => state.filter);
+  const { items, status } = useSelector(selectPizzaData);
+  const { categoryId, sort, currentPage, searchValue } = useSelector(selectFilter);
   const sortType = sort.sortProperty;
 
-  const { searchValue } = useContext(SearchContext);
-  // const [isLoading, setIsLoading] = useState(true);
   const pizzas = items.map((pizza) => <PizzaBlock {...pizza} key={pizza.id} />);
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
@@ -32,6 +30,8 @@ const Home = () => {
     dispatch(setCurrentPage(number));
   }
 
+  console.log(searchValue);
+
   const getPizzas = async () => {
     const category = categoryId > 0 ? `&category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
@@ -42,7 +42,7 @@ const Home = () => {
       sortType,
       currentPage
     }));
-    
+
     window.scrollTo(0, 0);
   }
 
