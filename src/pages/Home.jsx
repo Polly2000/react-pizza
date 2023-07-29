@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -18,7 +19,11 @@ const Home = () => {
   const { categoryId, sort, currentPage, searchValue } = useSelector(selectFilter);
   const sortType = sort.sortProperty;
 
-  const pizzas = items.map((pizza) => <PizzaBlock {...pizza} key={pizza.id} />);
+  const pizzas = items.map((pizza) => (
+    <Link to={`/pizza/${pizza.id}`}>
+      <PizzaBlock {...pizza} key={pizza.id} />
+    </Link>
+  ));
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
 
@@ -30,7 +35,6 @@ const Home = () => {
     dispatch(setCurrentPage(number));
   }
 
-  console.log(searchValue);
 
   const getPizzas = async () => {
     const category = categoryId > 0 ? `&category=${categoryId}` : '';

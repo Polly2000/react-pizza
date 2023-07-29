@@ -33,7 +33,7 @@ const pizzaSlice = createSlice({
                 state.status = 'success';
                 state.items = action.payload;
             })
-            .addCase(fetchPizzas.rejected, (state, action) => {
+            .addCase(fetchPizzas.rejected, (state) => {
                 state.status = 'error';
                 state.items = [];
             })

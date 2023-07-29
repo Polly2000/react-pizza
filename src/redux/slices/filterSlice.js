@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   categoryId: 0,
   currentPage: 1,
-  searchValue: '', // Внимание, у меня сломался поиск :D Но не в приложении, а в самом запросе (на сайте мок апи), так что ок
+  searchValue: '',
   sort: {
     name: 'популярности',
     sortProperty: 'rating',
