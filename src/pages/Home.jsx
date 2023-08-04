@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -19,40 +18,36 @@ const Home = () => {
   const { categoryId, sort, currentPage, searchValue } = useSelector(selectFilter);
   const sortType = sort.sortProperty;
 
-  const pizzas = items.map((pizza) => (
-    <Link to={`/pizza/${pizza.id}`}>
-      <PizzaBlock {...pizza} key={pizza.id} />
-    </Link>
-  ));
+  const pizzas = items.map((pizza) => <PizzaBlock {...pizza} key={pizza.id} />);
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
-
 
   const onClickCategory = (id) => {
     dispatch(setCategoryId(id));
-  }
+  };
 
   const onChangePage = (number) => {
     dispatch(setCurrentPage(number));
-  }
-
+  };
 
   const getPizzas = async () => {
     const category = categoryId > 0 ? `&category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    dispatch(fetchPizzas({
-      category,
-      search,
-      sortType,
-      currentPage
-    }));
+    dispatch(
+      fetchPizzas({
+        category,
+        search,
+        sortType,
+        currentPage,
+      }),
+    );
 
     window.scrollTo(0, 0);
-  }
+  };
 
   useEffect(() => {
     getPizzas();
-  }, [categoryId, sortType, searchValue, currentPage])
+  }, [categoryId, sortType, searchValue, currentPage]);
 
   // оставляю для теории
   // useEffect(() => {
@@ -84,7 +79,6 @@ const Home = () => {
   //   window.scrollTo(0, 0);
   // }, [categoryId, sortType, searchValue, currentPage]);
 
-
   return (
     <div className="container">
       <div className="content__top">
@@ -93,7 +87,7 @@ const Home = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
-        {status === 'success' ?  pizzas : skeletons}
+        {status === 'success' ? pizzas : skeletons}
         {/* {pizzas.map((pizza) => (
                 // можно сократить код:
                 <PizzaBlock {...pizza} key={pizza.id} />
